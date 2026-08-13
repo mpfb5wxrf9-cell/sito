@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import LogoMark from './LogoMark'
 import { signOut } from '../lib/auth'
 import { useAuth } from '../lib/AuthContext'
@@ -11,6 +12,14 @@ interface Props {
 
 export default function AppHeader({ active, onNavigate }: Props) {
   const { user } = useAuth()
+  const [copied, setCopied] = useState(false)
+
+  async function copyOrderLink() {
+    const url = `${window.location.origin}${window.location.pathname}#/ordina`
+    await navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-surface">
@@ -41,7 +50,14 @@ export default function AppHeader({ active, onNavigate }: Props) {
           </button>
         </nav>
 
-        <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-3 text-sm">
+          <button
+            type="button"
+            onClick={copyOrderLink}
+            className="hidden sm:inline rounded border border-border px-2.5 py-1.5 text-xs font-semibold text-foreground hover:bg-muted-surface transition-colors duration-200 cursor-pointer"
+          >
+            {copied ? 'Link copiato ✓' : 'Copia link ordini online'}
+          </button>
           <span className="text-muted hidden sm:inline">{user?.email}</span>
           <button
             type="button"

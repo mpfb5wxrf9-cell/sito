@@ -18,6 +18,8 @@ export interface OrderLine {
   notes?: string
 }
 
+export type OrderSource = 'staff' | 'online'
+
 export interface Order {
   id: string
   type: OrderType
@@ -27,6 +29,10 @@ export interface Order {
   total: number
   createdAt: number
   updatedAt: number
+  source?: OrderSource
+  customerName?: string
+  customerPhone?: string
+  customerAddress?: string
 }
 
 export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
