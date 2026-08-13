@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
-import LogoMark from '../components/LogoMark'
+import AppHeader from '../components/AppHeader'
 import MenuGrid from '../components/MenuGrid'
 import Cart from '../components/Cart'
 import OrdersBoard from '../components/OrdersBoard'
 import { watchMenuItems, watchOrders, createOrder, setOrderStatus } from '../lib/firestore'
-import { signOut } from '../lib/auth'
-import { useAuth } from '../lib/AuthContext'
 import { ORDER_STATUS_FLOW, type MenuItem, type Order, type OrderLine, type OrderType } from '../lib/types'
 
-export default function Pos() {
-  const { user } = useAuth()
+interface Props {
+  onNavigate: (view: 'pos' | 'menu') => void
+}
+
+export default function Pos({ onNavigate }: Props) {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [orderType, setOrderType] = useState<OrderType>('tavolo')
@@ -61,25 +62,7 @@ export default function Pos() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-10 border-b border-border bg-surface/90 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <LogoMark className="h-8 w-8" />
-            <span className="font-heading font-semibold text-lg">Impasto</span>
-            <span className="text-xs text-muted ml-2 hidden sm:inline">Cassa &amp; Ordini</span>
-          </div>
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-muted hidden sm:inline">{user?.email}</span>
-            <button
-              type="button"
-              onClick={() => signOut()}
-              className="font-semibold text-foreground hover:text-primary transition-colors duration-200 cursor-pointer"
-            >
-              Esci
-            </button>
-          </div>
-        </div>
-      </header>
+      <AppHeader active="pos" onNavigate={onNavigate} />
 
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex flex-col lg:flex-row gap-6">
