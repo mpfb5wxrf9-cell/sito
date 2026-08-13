@@ -2,6 +2,7 @@ import {
   collection,
   addDoc,
   updateDoc,
+  deleteDoc,
   doc,
   onSnapshot,
   query,
@@ -24,6 +25,25 @@ export function watchMenuItems(callback: (items: MenuItem[]) => void) {
     const items = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as MenuItem)
     callback(items.filter((item) => item.active !== false))
   })
+}
+
+export function watchAllMenuItems(callback: (items: MenuItem[]) => void) {
+  const q = query(collection(db, 'menuItems'), orderBy('category'), orderBy('name'))
+  return onSnapshot(q, (snapshot) => {
+    callback(snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as MenuItem))
+  })
+}
+
+export async function createMenuItem(data: Omit<MenuItem, 'id'>) {
+  await addDoc(collection(db, 'menuItems'), data)
+}
+
+export async function updateMenuItem(id: string, data: Partial<Omit<MenuItem, 'id'>>) {
+  await updateDoc(doc(db, 'menuItems', id), data)
+}
+
+export async function deleteMenuItem(id: string) {
+  await deleteDoc(doc(db, 'menuItems', id))
 }
 
 export function watchOrders(callback: (orders: Order[]) => void) {
