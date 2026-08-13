@@ -15,7 +15,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = watchAuthState((u) => {
-      setUser(u)
+      // Un utente anonimo (creato dalla pagina ordini pubblica #/ordina se
+      // aperta nello stesso browser) non è staff: trattarlo come "non
+      // loggato" qui, altrimenti l'app staff lascia entrare senza un vero
+      // login e ogni scrittura sul menu/ordini fallisce con
+      // permission-denied (le regole richiedono un provider diverso da
+      // "anonymous" per le azioni da staff).
+      setUser(u && !u.isAnonymous ? u : null)
       setLoading(false)
     })
     return unsubscribe
