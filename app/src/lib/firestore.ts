@@ -19,19 +19,38 @@ function toMillis(value: unknown): number {
   return typeof value === 'number' ? value : Date.now()
 }
 
+// Ordina per categoria e nome in JavaScript invece di chiederlo a Firestore
+// con due orderBy: una query con orderBy su due campi diversi richiede un
+// indice composito su Firestore "vero" (l'emulatore locale invece la
+// esegue comunque, quindi il problema non emergeva in sviluppo). Senza
+// quell'indice la query falliva in silenzio — nessun errore, ma il menu
+// restava vuoto per sempre. Ordinare qui evita di dover creare indici
+// manualmente in console.
+function sortByCategoryThenName(items: MenuItem[]): MenuItem[] {
+  return [...items].sort(
+    (a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name),
+  )
+}
+
 export function watchMenuItems(callback: (items: MenuItem[]) => void) {
-  const q = query(collection(db, 'menuItems'), orderBy('category'), orderBy('name'))
-  return onSnapshot(q, (snapshot) => {
-    const items = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as MenuItem)
-    callback(items.filter((item) => item.active !== false))
-  })
+  return onSnapshot(
+    collection(db, 'menuItems'),
+    (snapshot) => {
+      const items = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as MenuItem)
+      callback(sortByCategoryThenName(items).filter((item) => item.active !== false))
+    },
+    (err) => console.error('watchMenuItems:', err),
+  )
 }
 
 export function watchAllMenuItems(callback: (items: MenuItem[]) => void) {
-  const q = query(collection(db, 'menuItems'), orderBy('category'), orderBy('name'))
-  return onSnapshot(q, (snapshot) => {
-    callback(snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as MenuItem))
-  })
+  return onSnapshot(
+    collection(db, 'menuItems'),
+    (snapshot) => {
+      callback(sortByCategoryThenName(snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as MenuItem)))
+    },
+    (err) => console.error('watchAllMenuItems:', err),
+  )
 }
 
 export async function createMenuItem(data: Omit<MenuItem, 'id'>) {
@@ -48,26 +67,30 @@ export async function deleteMenuItem(id: string) {
 
 export function watchOrders(callback: (orders: Order[]) => void) {
   const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(100))
-  return onSnapshot(q, (snapshot) => {
-    const orders = snapshot.docs.map((d) => {
-      const data = d.data()
-      return {
-        id: d.id,
-        type: data.type,
-        tableLabel: data.tableLabel,
-        items: data.items,
-        status: data.status,
-        total: data.total,
-        createdAt: toMillis(data.createdAt),
-        updatedAt: toMillis(data.updatedAt),
-        source: data.source,
-        customerName: data.customerName,
-        customerPhone: data.customerPhone,
-        customerAddress: data.customerAddress,
-      } as Order
-    })
-    callback(orders)
-  })
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const orders = snapshot.docs.map((d) => {
+        const data = d.data()
+        return {
+          id: d.id,
+          type: data.type,
+          tableLabel: data.tableLabel,
+          items: data.items,
+          status: data.status,
+          total: data.total,
+          createdAt: toMillis(data.createdAt),
+          updatedAt: toMillis(data.updatedAt),
+          source: data.source,
+          customerName: data.customerName,
+          customerPhone: data.customerPhone,
+          customerAddress: data.customerAddress,
+        } as Order
+      })
+      callback(orders)
+    },
+    (err) => console.error('watchOrders:', err),
+  )
 }
 
 interface CreateOrderInput {
