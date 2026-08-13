@@ -15,12 +15,22 @@ interface DraftItem {
 
 const EMPTY_DRAFT: DraftItem = { name: '', category: '', price: '' }
 
+function errorMessage(e: unknown): string {
+  const code = (e as { code?: string })?.code
+  if (code === 'permission-denied') {
+    return 'Permesso negato da Firestore. Controlla di aver incollato le regole aggiornate (firestore.rules) nella console Firebase.'
+  }
+  if (code) return `Errore Firestore: ${code}`
+  return e instanceof Error ? e.message : 'Errore sconosciuto'
+}
+
 export default function MenuManager({ onNavigate }: Props) {
   const [items, setItems] = useState<MenuItem[]>([])
   const [newItem, setNewItem] = useState<DraftItem>(EMPTY_DRAFT)
   const [adding, setAdding] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editDraft, setEditDraft] = useState<DraftItem>(EMPTY_DRAFT)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => watchAllMenuItems(setItems), [])
 
@@ -28,12 +38,22 @@ export default function MenuManager({ onNavigate }: Props) {
 
   async function handleAdd(e: FormEvent) {
     e.preventDefault()
+    setError(null)
     const price = Number(newItem.price.replace(',', '.'))
-    if (!newItem.name.trim() || !newItem.category.trim() || Number.isNaN(price)) return
+    if (!newItem.name.trim() || !newItem.category.trim()) {
+      setError('Compila nome e categoria.')
+      return
+    }
+    if (Number.isNaN(price)) {
+      setError(`Prezzo non valido: "${newItem.price}". Usa un numero, es. 8.50.`)
+      return
+    }
     setAdding(true)
     try {
       await createMenuItem({ name: newItem.name.trim(), category: newItem.category.trim(), price, active: true })
       setNewItem(EMPTY_DRAFT)
+    } catch (err) {
+      setError(errorMessage(err))
     } finally {
       setAdding(false)
     }
@@ -42,22 +62,44 @@ export default function MenuManager({ onNavigate }: Props) {
   function startEdit(item: MenuItem) {
     setEditingId(item.id)
     setEditDraft({ name: item.name, category: item.category, price: String(item.price) })
+    setError(null)
   }
 
   async function saveEdit(id: string) {
+    setError(null)
     const price = Number(editDraft.price.replace(',', '.'))
-    if (!editDraft.name.trim() || !editDraft.category.trim() || Number.isNaN(price)) return
-    await updateMenuItem(id, { name: editDraft.name.trim(), category: editDraft.category.trim(), price })
-    setEditingId(null)
+    if (!editDraft.name.trim() || !editDraft.category.trim()) {
+      setError('Compila nome e categoria.')
+      return
+    }
+    if (Number.isNaN(price)) {
+      setError(`Prezzo non valido: "${editDraft.price}".`)
+      return
+    }
+    try {
+      await updateMenuItem(id, { name: editDraft.name.trim(), category: editDraft.category.trim(), price })
+      setEditingId(null)
+    } catch (err) {
+      setError(errorMessage(err))
+    }
   }
 
   async function toggleActive(item: MenuItem) {
-    await updateMenuItem(item.id, { active: item.active === false })
+    setError(null)
+    try {
+      await updateMenuItem(item.id, { active: item.active === false })
+    } catch (err) {
+      setError(errorMessage(err))
+    }
   }
 
   async function handleDelete(item: MenuItem) {
-    if (window.confirm(`Eliminare "${item.name}" dal menu?`)) {
+    if (!window.confirm(`Eliminare "${item.name}" dal menu?`)) return
+    setError(null)
+    try {
       await deleteMenuItem(item.id)
+    } catch (err) {
+      setError(errorMessage(err))
     }
   }
 
@@ -70,6 +112,12 @@ export default function MenuManager({ onNavigate }: Props) {
         <p className="mt-1 text-sm text-muted">
           Le modifiche compaiono subito nella cassa. Disattiva una voce per nasconderla senza eliminarla.
         </p>
+
+        {error && (
+          <p role="alert" className="mt-4 rounded border border-destructive bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            {error}
+          </p>
+        )}
 
         <form onSubmit={handleAdd} className="mt-6 rounded-md border border-border bg-surface p-5">
           <h2 className="font-heading text-lg font-semibold mb-4">Aggiungi voce</h2>
