@@ -1,0 +1,15 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Login singolo condiviso: chiunque sia autenticato (staff) può leggere
+    // e scrivere il menu e gli ordini. Da affinare con ruoli quando si
+    // passerà a login individuali per operatore.
+    match /menuItems/{itemId} {
+      allow read, write: if request.auth != null;
+    }
+    match /orders/{orderId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
