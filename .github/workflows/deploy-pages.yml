@@ -29,16 +29,19 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
+        working-directory: app
         run: npm ci
 
-      - name: Build CSS
+      - name: Build app
+        working-directory: app
+        env:
+          VITE_USE_FIREBASE_EMULATOR: 'false'
         run: npm run build
 
       - name: Assemble static site
         run: |
-          mkdir -p _site/dist
-          cp index.html _site/
-          cp dist/output.css _site/dist/output.css
+          mkdir -p _site
+          cp -r app/dist/. _site/
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
