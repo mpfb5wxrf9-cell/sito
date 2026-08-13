@@ -31,13 +31,13 @@ export default function OrdersBoard({ orders, onAdvance }: Props) {
       {columns.map((status) => {
         const ordersInColumn = orders.filter((o) => o.status === status)
         return (
-          <div key={status} className="rounded-2xl bg-muted-surface p-4">
+          <div key={status} className="rounded-md bg-muted-surface p-4">
             <h3 className="font-heading text-sm font-bold text-muted uppercase tracking-wide mb-3">
               {ORDER_STATUS_LABEL[status]} · {ordersInColumn.length}
             </h3>
             <div className="space-y-3">
               {ordersInColumn.map((order) => (
-                <div key={order.id} className="rounded-xl bg-surface border border-border p-4 shadow-card">
+                <div key={order.id} className="rounded bg-surface border border-border p-4">
                   <div className="flex items-center justify-between text-xs text-muted">
                     <span className="font-semibold text-foreground">
                       {ORDER_TYPE_LABEL[order.type]}
@@ -58,7 +58,7 @@ export default function OrdersBoard({ orders, onAdvance }: Props) {
                       <button
                         type="button"
                         onClick={() => onAdvance(order)}
-                        className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90 transition-opacity duration-200 cursor-pointer"
+                        className="rounded bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90 transition-opacity duration-200 cursor-pointer"
                       >
                         {NEXT_ACTION_LABEL[order.status]}
                       </button>

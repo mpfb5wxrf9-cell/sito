@@ -1,11 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="impasto-gradient" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2563eb"/>
-      <stop offset="1" stop-color="#ea580c"/>
-    </linearGradient>
-  </defs>
-  <rect width="512" height="512" rx="128" fill="url(#impasto-gradient)"/>
-  <circle cx="256" cy="256" r="150" fill="none" stroke="#ffffff" stroke-width="40"/>
-  <path d="M256 171 V256 L320 299" fill="none" stroke="#ffffff" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect width="512" height="512" rx="64" fill="#241c15"/>
+  <path d="M256 132 L172 344 Q256 380 340 344 Z" fill="#fbf6ee"/>
+  <path d="M198 322 Q256 348 314 322" fill="none" stroke="#241c15" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="256" cy="204" r="17" fill="#241c15"/>
+  <circle cx="216" cy="258" r="14" fill="#241c15"/>
+  <circle cx="292" cy="264" r="14" fill="#241c15"/>
 </svg>

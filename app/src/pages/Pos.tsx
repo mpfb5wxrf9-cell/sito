@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import LogoMark from '../components/LogoMark'
 import MenuGrid from '../components/MenuGrid'
 import Cart from '../components/Cart'
 import OrdersBoard from '../components/OrdersBoard'
@@ -63,13 +64,8 @@ export default function Pos() {
       <header className="sticky top-0 z-10 border-b border-border bg-surface/90 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-primary to-accent text-white">
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 3v9l6 3" />
-              </svg>
-            </span>
-            <span className="font-heading font-bold text-lg">Impasto</span>
+            <LogoMark className="h-8 w-8" />
+            <span className="font-heading font-semibold text-lg">Impasto</span>
             <span className="text-xs text-muted ml-2 hidden sm:inline">Cassa &amp; Ordini</span>
           </div>
           <div className="flex items-center gap-4 text-sm">

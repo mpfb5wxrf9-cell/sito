@@ -31,7 +31,7 @@ export default function MenuGrid({ items, onAdd }: Props) {
                   key={item.id}
                   type="button"
                   onClick={() => onAdd(item)}
-                  className="text-left rounded-xl border border-border bg-surface p-4 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  className="text-left rounded border border-border bg-surface p-4 hover:border-foreground transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
                   <p className="font-semibold text-sm">{item.name}</p>
                   <p className="mt-1 text-sm text-muted">€{item.price.toFixed(2)}</p>
