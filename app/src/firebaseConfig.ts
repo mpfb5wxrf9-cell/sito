@@ -8,12 +8,12 @@ import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 // Sostituisci i placeholder con la config reale del tuo progetto:
 // Firebase Console -> Project settings -> General -> "Your apps" -> SDK setup and configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY ?? 'demo-api-key',
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ?? 'impasto-pos-demo.firebaseapp.com',
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ?? 'impasto-pos-demo',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ?? 'impasto-pos-demo.appspot.com',
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ?? '000000000000',
-  appId: import.meta.env.VITE_FIREBASE_APP_ID ?? '1:000000000000:web:0000000000000000000000',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY ?? 'AIzaSyCz7vASEJTfEZhVCRTYgMfue51eEfpi804',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ?? 'gestionale-690b0.firebaseapp.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ?? 'gestionale-690b0',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ?? 'gestionale-690b0.firebasestorage.app',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ?? '567499373996',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID ?? '1:567499373996:web:89570cf5c96a23cc580e09',
 }
 
 export const app = initializeApp(firebaseConfig)
