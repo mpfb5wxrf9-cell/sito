@@ -8,14 +8,63 @@
 
 **Project:** Impasto
 **Generated:** 2026-08-13 14:11:17
+**Revised:** 2026-08-13 (v2 — flat/warm redesign, superseded the original gradient direction below)
 **Category:** SaaS (General)
 **Design Dials:** Variance 6/10 (Balanced / Modern) | Motion 5/10 (Standard) | Density 5/10 (Standard)
 
 ---
 
-## Global Rules
+## Revision notes (v2)
 
-### Color Palette
+La prima versione (palette blu/arancio a gradiente, ombre morbide, font geometrico Space
+Grotesk) leggeva troppo come un template SaaS generico. La v2 adotta uno stile **Flat
+Design** deliberatamente diverso: colori pieni (nessun gradiente), bordi netti al posto
+delle ombre sfumate, raggio degli angoli ridotto, tipografia editoriale (serif per i
+titoli). L'app (`app/`) usa già questi valori; questa tabella li documenta come fonte di
+verità aggiornata.
+
+### Color Palette (attuale)
+
+| Role | Hex | CSS Variable |
+|------|-----|--------------|
+| Primary (tomato) | `#C0392B` | `--color-primary` |
+| Primary Foreground | `#FBF6EE` | `--color-primary-foreground` |
+| Secondary (mustard) | `#C98A2C` | `--color-secondary` |
+| Accent (basil) | `#3F6B42` | `--color-accent` |
+| Background (paper) | `#FBF6EE` | `--color-background` |
+| Surface | `#FFFDF8` | `--color-surface` |
+| Foreground (ink) | `#241C15` | `--color-foreground` |
+| Muted | `#7A6F5D` | `--color-muted` |
+| Muted Surface | `#F1E9DA` | `--color-muted-surface` |
+| Border (crust) | `#E4D9C7` | `--color-border` |
+| Destructive | `#8C2F24` | `--color-destructive` |
+| Ring | `#C0392B` | `--color-ring` |
+
+**Color Notes:** Nessun gradiente. Le card usano solo `border` per la separazione (niente `box-shadow` morbido).
+
+### Typography (attuale)
+
+- **Heading Font:** Fraunces (serif, evoca menu/insegna da forno)
+- **Body Font:** DM Sans
+- **Mood:** artigianale, caldo, editoriale, non generico
+
+**CSS Import:**
+```css
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+```
+
+### Shape
+
+- Angoli: `rounded` (4px) su input/bottoni, `rounded-md` (6px) su card/badge — mai `rounded-xl`/`rounded-2xl`
+- Ombre: nessuna (`shadow-card`/`shadow-card-hover` impostate a `none`); l'hover sulle card cambia `border-color`, non aggiunge glow
+
+---
+
+## Versione originale (v1, superata)
+
+La tabella sotto era la palette generata automaticamente dalla skill `ui-ux-pro-max`
+(stile "Aurora UI", gradiente blu/arancio) usata nella prima landing page. Conservata
+per riferimento storico.
 
 | Role | Hex | CSS Variable |
 |------|-----|--------------|
@@ -32,17 +81,7 @@
 
 **Color Notes:** Tracking blue + delivery orange [Accent adjusted from #F97316 for WCAG 3:1]
 
-### Typography
-
-- **Heading Font:** Satoshi
-- **Body Font:** General Sans
-- **Mood:** premium, modern, clean, sophisticated, versatile, balanced
-- **Google Fonts:** [Satoshi + General Sans](https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap)
-
-**CSS Import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
-```
+**Heading Font:** Satoshi · **Body Font:** General Sans
 
 ### Spacing Variables
 

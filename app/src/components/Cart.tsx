@@ -32,16 +32,16 @@ export default function Cart({
   const total = lines.reduce((sum, line) => sum + line.unitPrice * line.qty, 0)
 
   return (
-    <aside className="w-full lg:w-80 shrink-0 rounded-2xl border border-border bg-surface p-5 flex flex-col h-fit lg:sticky lg:top-6">
+    <aside className="w-full lg:w-80 shrink-0 rounded-md border border-border bg-surface p-5 flex flex-col h-fit lg:sticky lg:top-6">
       <div className="flex gap-2">
         {ORDER_TYPES.map((t) => (
           <button
             key={t.value}
             type="button"
             onClick={() => onOrderTypeChange(t.value)}
-            className={`flex-1 rounded-lg px-2 py-2 text-xs font-semibold transition-colors duration-200 cursor-pointer ${
+            className={`flex-1 rounded px-2 py-2 text-xs font-semibold transition-colors duration-200 cursor-pointer ${
               orderType === t.value
-                ? 'bg-primary text-white'
+                ? 'bg-primary text-primary-foreground'
                 : 'bg-muted-surface text-muted hover:text-foreground'
             }`}
           >
@@ -56,7 +56,7 @@ export default function Cart({
           placeholder="Numero tavolo"
           value={tableLabel}
           onChange={(e) => onTableLabelChange(e.target.value)}
-          className="mt-3 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          className="mt-3 w-full rounded border border-border bg-background px-3 py-2 text-sm focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         />
       )}
 
@@ -102,7 +102,7 @@ export default function Cart({
           type="button"
           disabled={lines.length === 0 || submitting || (orderType === 'tavolo' && !tableLabel.trim())}
           onClick={onSubmit}
-          className="mt-4 w-full rounded-lg bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground hover:opacity-90 transition-opacity duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-4 w-full rounded bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {submitting ? 'Invio…' : 'Invia ordine'}
         </button>

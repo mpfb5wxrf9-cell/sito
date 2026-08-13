@@ -5,8 +5,8 @@
   "start_url": "/sito/",
   "scope": "/sito/",
   "display": "standalone",
-  "background_color": "#f7faff",
-  "theme_color": "#2563eb",
+  "background_color": "#fbf6ee",
+  "theme_color": "#241c15",
   "icons": [
     {
       "src": "/sito/icon-192.png",
