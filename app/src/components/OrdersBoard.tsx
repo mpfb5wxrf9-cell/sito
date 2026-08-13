@@ -39,12 +39,22 @@ export default function OrdersBoard({ orders, onAdvance }: Props) {
               {ordersInColumn.map((order) => (
                 <div key={order.id} className="rounded bg-surface border border-border p-4">
                   <div className="flex items-center justify-between text-xs text-muted">
-                    <span className="font-semibold text-foreground">
+                    <span className="font-semibold text-foreground flex items-center gap-1.5">
                       {ORDER_TYPE_LABEL[order.type]}
                       {order.tableLabel ? ` ${order.tableLabel}` : ''}
+                      {order.source === 'online' && (
+                        <span className="rounded bg-accent/15 text-accent px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide">
+                          Online
+                        </span>
+                      )}
                     </span>
                     <span>{new Date(order.createdAt).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
+                  {(order.customerName || order.customerPhone || order.customerAddress) && (
+                    <p className="mt-1 text-xs text-muted">
+                      {[order.customerName, order.customerPhone, order.customerAddress].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
                   <ul className="mt-2 text-sm space-y-0.5">
                     {order.items.map((line, i) => (
                       <li key={i} className="text-foreground">

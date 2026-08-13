@@ -12,7 +12,7 @@ import {
   Timestamp,
 } from 'firebase/firestore'
 import { db } from '../firebaseConfig'
-import type { MenuItem, Order, OrderLine, OrderStatus, OrderType } from './types'
+import type { MenuItem, Order, OrderLine, OrderSource, OrderStatus, OrderType } from './types'
 
 function toMillis(value: unknown): number {
   if (value instanceof Timestamp) return value.toMillis()
@@ -60,22 +60,40 @@ export function watchOrders(callback: (orders: Order[]) => void) {
         total: data.total,
         createdAt: toMillis(data.createdAt),
         updatedAt: toMillis(data.updatedAt),
+        source: data.source,
+        customerName: data.customerName,
+        customerPhone: data.customerPhone,
+        customerAddress: data.customerAddress,
       } as Order
     })
     callback(orders)
   })
 }
 
-export async function createOrder(type: OrderType, tableLabel: string | undefined, items: OrderLine[]) {
-  const total = items.reduce((sum, item) => sum + item.unitPrice * item.qty, 0)
+interface CreateOrderInput {
+  type: OrderType
+  tableLabel?: string
+  items: OrderLine[]
+  source?: OrderSource
+  customerName?: string
+  customerPhone?: string
+  customerAddress?: string
+}
+
+export async function createOrder(input: CreateOrderInput) {
+  const total = input.items.reduce((sum, item) => sum + item.unitPrice * item.qty, 0)
   await addDoc(collection(db, 'orders'), {
-    type,
-    tableLabel: tableLabel ?? null,
-    items,
+    type: input.type,
+    tableLabel: input.tableLabel ?? null,
+    items: input.items,
     status: 'aperto' as OrderStatus,
     total,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
+    source: input.source ?? 'staff',
+    customerName: input.customerName ?? null,
+    customerPhone: input.customerPhone ?? null,
+    customerAddress: input.customerAddress ?? null,
   })
 }
 

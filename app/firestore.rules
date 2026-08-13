@@ -2,14 +2,21 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Login singolo condiviso: chiunque sia autenticato (staff) può leggere
-    // e scrivere il menu e gli ordini. Da affinare con ruoli quando si
-    // passerà a login individuali per operatore.
+    // Lo staff usa un login singolo condiviso (email/password). I clienti
+    // che ordinano dalla pagina pubblica (#/ordina) sono autenticati in modo
+    // anonimo (invisibile a loro) solo per poter creare un ordine: non
+    // devono poter leggere gli ordini altrui né toccare il menu.
+    function isStaff() {
+      return request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
     match /menuItems/{itemId} {
-      allow read, write: if request.auth != null;
+      allow read: if true;
+      allow write: if isStaff();
     }
     match /orders/{orderId} {
-      allow read, write: if request.auth != null;
+      allow read, update, delete: if isStaff();
+      allow create: if request.auth != null;
     }
   }
 }

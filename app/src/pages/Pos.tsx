@@ -46,7 +46,12 @@ export default function Pos({ onNavigate }: Props) {
   async function handleSubmit() {
     setSubmitting(true)
     try {
-      await createOrder(orderType, orderType === 'tavolo' ? tableLabel : undefined, cartLines)
+      await createOrder({
+        type: orderType,
+        tableLabel: orderType === 'tavolo' ? tableLabel : undefined,
+        items: cartLines,
+        source: 'staff',
+      })
       setCartLines([])
       setTableLabel('')
     } finally {
